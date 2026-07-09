@@ -2,3 +2,15 @@ node_modules
 .next
 tsconfig.tsbuildinfo
 .DS_Store
+
+# Local references, mockups, and planning files
+/assets/
+plan*.md
+role.md
+harta_bot_design_system.md
+HartaBot_Design_System_Analysis.md
+
+# Alternate/reference logo files not used by the app
+public/assets/hartabot-logo-adaptive.svg
+public/assets/hartabot-logo-dark.svg
+public/assets/logo-hartabot.avif
