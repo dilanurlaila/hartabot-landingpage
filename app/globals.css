@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  --sage-clear: #d4e9e2;
+  --sage-active: #88b5a5;
+  --trust-navy: #1a365d;
+  --haro-gold: #f6ad55;
+  --haro-gold-hover: #e2953b;
+  --pure-white: #ffffff;
+  --ink-navy: #2d3748;
+}
+
+@theme inline {
+  --color-sage-clear: var(--sage-clear);
+  --color-sage-active: var(--sage-active);
+  --color-trust-navy: var(--trust-navy);
+  --color-haro-gold: var(--haro-gold);
+  --color-haro-gold-hover: var(--haro-gold-hover);
+  --color-pure-white: var(--pure-white);
+  --color-ink-navy: var(--ink-navy);
+  --font-sans: var(--font-inter);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: #ffffff;
+  color: var(--ink-navy);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: rgba(246, 173, 85, 0.35);
+}
