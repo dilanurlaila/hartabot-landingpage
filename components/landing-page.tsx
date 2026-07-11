@@ -23,6 +23,7 @@ import {
   TrendingUp,
   Youtube,
   X,
+  Menu,
 } from "lucide-react";
 import { Badge } from "@/components/badge";
 import { Button } from "@/components/button";
@@ -104,21 +105,24 @@ const workflowSteps = [
   {
     icon: ClipboardCheck,
     title: "Pencatatan Otomatis & Cerdas",
-    description: "AI membaca nominal, kategori, dan waktu transaksi, lalu memberi konfirmasi.",
+    description:
+      "AI membaca nominal, kategori, dan waktu transaksi, lalu memberi konfirmasi.",
     example: "beli bensin pertamax 50rb",
     action: "Analisis otomatis",
   },
   {
     icon: BarChart3,
     title: "Akses Dashboard Privat Aman",
-    description: "Minta laporan untuk membuka visualisasi keuangan yang hanya bisa kamu akses.",
+    description:
+      "Minta laporan untuk membuka visualisasi keuangan yang hanya bisa kamu akses.",
     example: "minta laporan",
     action: "Minta laporan",
   },
   {
     icon: BellRing,
     title: "Notifikasi Batas Pengeluaran",
-    description: "Haro memberi pengingat ketika pola belanja mulai melewati batas harian.",
+    description:
+      "Haro memberi pengingat ketika pola belanja mulai melewati batas harian.",
     example: "beli kopi es kelima hari ini 25k",
     action: "Cek peringatan",
   },
@@ -152,11 +156,7 @@ type ChatMessage = {
   warning?: boolean;
 };
 
-function Logo({
-  size = "nav",
-}: {
-  size?: "nav" | "footer";
-}) {
+function Logo({ size = "nav" }: { size?: "nav" | "footer" }) {
   return (
     <div
       className={cn(
@@ -180,38 +180,107 @@ function Logo({
 
 function Navbar() {
   const { scrollY } = useScroll();
+  const [isOpen, setIsOpen] = useState(false);
+
   const background = useTransform(
     scrollY,
     [0, 80],
-    ["rgba(212,233,226,0)", "rgba(255,255,255,0.86)"],
+    ["rgba(212,233,226,0)", "rgba(255,255,255,0.95)"],
   );
   const shadow = useTransform(
     scrollY,
     [0, 80],
-    ["0 0 0 rgba(26,54,93,0)", "0 18px 50px rgba(26,54,93,0.08)"],
+    ["0 0 0 rgba(26,54,93,0)", "0 10px 30px rgba(26,54,93,0.05)"],
   );
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
 
   return (
     <motion.header
       style={{ background, boxShadow: shadow }}
       className="fixed inset-x-0 top-0 z-50 border-b border-white/30 backdrop-blur-xl"
     >
-      <Container className="flex h-20 items-center justify-between">
+      <Container className="flex h-20 items-center justify-between relative">
         <Logo />
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Navigasi utama">
+
+        {/* --- NAVIGASI DESKTOP --- */}
+        <nav
+          className="hidden items-center gap-8 lg:flex"
+          aria-label="Navigasi utama"
+        >
           {navItems.map((item) => (
             <a
               key={item}
-              href={item === "Beranda" ? "#beranda" : `#${item.toLowerCase().replace(" ", "-")}`}
+              href={
+                item === "Beranda"
+                  ? "#beranda"
+                  : `#${item.toLowerCase().replace(" ", "-")}`
+              }
               className="text-sm font-semibold text-ink-navy/75 transition hover:text-trust-navy"
             >
               {item}
             </a>
           ))}
         </nav>
-        <Button href="#coba" className="hidden px-5 sm:inline-flex">
-          Coba HartaBot
-        </Button>
+
+        {/* --- KONTROL KANAN (DESKTOP VS MOBILE) --- */}
+        <div className="flex items-center gap-4">
+          {/* Pembungkus luar menggunakan DIV HTML murni agar tombol kustom tersembunyi total di mobile */}
+          <div className="hidden lg:block">
+            <Button href="https://t.me/hartabot_bot" className="px-5">
+              Coba HartaBot
+            </Button>
+          </div>
+
+          {/* Tombol Hamburger ini hanya akan muncul di mobile (< lg) */}
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="flex size-10 items-center justify-center rounded-xl bg-white/50 text-trust-navy shadow-sm ring-1 ring-slate-200/50 lg:hidden"
+            aria-label={isOpen ? "Tutup menu" : "Buka menu"}
+          >
+            {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+          </button>
+        </div>
+
+        {/* --- DRAWER MENU MOBILE --- */}
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-x-4 top-24 z-50 overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-xl lg:hidden"
+          >
+            <div className="flex flex-col gap-4">
+              {navItems.map((item) => (
+                <a
+                  key={item}
+                  href={
+                    item === "Beranda"
+                      ? "#beranda"
+                      : `#${item.toLowerCase().replace(" ", "-")}`
+                  }
+                  onClick={handleLinkClick}
+                  className="rounded-xl px-4 py-2.5 text-base font-semibold text-ink-navy/80 transition hover:bg-slate-50 hover:text-trust-navy"
+                >
+                  {item}
+                </a>
+              ))}
+              <hr className="my-2 border-slate-100" />
+              <div onClick={handleLinkClick} className="w-full">
+                <Button
+                  href="https://t.me/hartabot_bot"
+                  className="w-full justify-center py-3"
+                >
+                  Coba HartaBot
+                </Button>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </Container>
     </motion.header>
   );
@@ -237,9 +306,13 @@ function PhoneMockup() {
   );
 }
 
-function Hero() {
+// Menerima prop onOpenAlert dari LandingPage agar tidak merah lagi
+function Hero({ onOpenAlert }: { onOpenAlert: () => void }) {
   return (
-    <section id="beranda" className="relative overflow-hidden bg-sage-clear pt-32">
+    <section
+      id="beranda"
+      className="relative overflow-hidden bg-sage-clear pt-32"
+    >
       <div className="absolute right-[-120px] top-24 size-[360px] rounded-full bg-white/40 blur-3xl" />
       <div className="absolute bottom-6 left-[-90px] size-[260px] rounded-full bg-haro-gold/20 blur-3xl" />
       <Container className="grid min-h-[760px] items-center gap-12 pb-20 lg:grid-cols-[1.02fr_0.98fr] lg:pb-24">
@@ -258,15 +331,28 @@ function Hero() {
             Catat. Pahami. Kendalikan Keuanganmu dengan HartaBot
           </h1>
           <p className="mt-6 max-w-xl text-base leading-[1.75] text-ink-navy/82 sm:text-lg">
-            HartaBot membantu kamu mencatat transaksi, membaca pola pengeluaran, dan membangun
-            keputusan finansial yang lebih tenang lewat chat sehari-hari.
+            HartaBot membantu kamu mencatat transaksi, membaca pola pengeluaran,
+            dan membangun keputusan finansial yang lebih tenang lewat chat
+            sehari-hari.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button href="#coba" className="min-w-40">
-              <MessageCircle className="size-5" />
-              WhatsApp
-            </Button>
-            <Button href="#coba" variant="secondary" className="min-w-40 bg-white/35">
+            <div
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenAlert();
+              }}
+              className="cursor-pointer w-full sm:w-auto"
+            >
+              <Button href="#" className="min-w-40 pointer-events-none w-full">
+                <MessageCircle className="size-5" />
+                WhatsApp
+              </Button>
+            </div>
+            <Button
+              href="https://t.me/hartabot_bot"
+              variant="secondary"
+              className="min-w-40 bg-white/35"
+            >
               <Send className="size-5" />
               Telegram
             </Button>
@@ -292,7 +378,12 @@ function Hero() {
           <motion.div
             initial={{ opacity: 0, x: -28, y: 18, rotate: -8 }}
             animate={{ opacity: 1, x: 0, y: [0, -10, 0], rotate: -5 }}
-            transition={{ duration: 5.8, delay: 0.4, repeat: Infinity, ease: "easeInOut" }}
+            transition={{
+              duration: 5.8,
+              delay: 0.4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
             className="absolute left-0 top-10 hidden w-36 overflow-hidden rounded-3xl shadow-[0_24px_52px_rgba(26,54,93,0.16)] sm:block lg:-left-4"
           >
             <Image
@@ -306,7 +397,12 @@ function Hero() {
           <motion.div
             initial={{ opacity: 0, x: 22, y: 20, rotate: 8 }}
             animate={{ opacity: 1, x: 0, y: [0, 12, 0], rotate: 6 }}
-            transition={{ duration: 6.4, delay: 0.55, repeat: Infinity, ease: "easeInOut" }}
+            transition={{
+              duration: 6.4,
+              delay: 0.55,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
             className="absolute bottom-16 left-2 hidden w-32 overflow-hidden rounded-3xl shadow-[0_24px_52px_rgba(26,54,93,0.14)] sm:block"
           >
             <Image
@@ -354,10 +450,12 @@ function Features() {
           className="mx-auto max-w-2xl text-center"
         >
           <Badge className="bg-sage-clear/55">Kenapa HartaBot?</Badge>
-          <h2 className="mt-5 text-3xl font-semibold text-trust-navy sm:text-5xl">Keuangan terasa ringan saat sistemnya paham kamu.</h2>
+          <h2 className="mt-5 text-3xl font-semibold text-trust-navy sm:text-5xl">
+            Keuangan terasa ringan saat sistemnya paham kamu.
+          </h2>
           <p className="mt-5 text-base leading-[1.7] text-ink-navy/72">
-            Empat kemampuan inti yang dirancang untuk membuat pencatatan uang lebih natural,
-            privat, dan konsisten.
+            Empat kemampuan inti yang dirancang untuk membuat pencatatan uang
+            lebih natural, privat, dan konsisten.
           </p>
         </motion.div>
         <motion.div
@@ -383,8 +481,12 @@ function Features() {
                 <div className="flex size-12 items-center justify-center rounded-2xl bg-sage-clear text-trust-navy">
                   <Icon className="size-6" />
                 </div>
-                <h3 className="mt-6 text-xl font-semibold text-trust-navy">{feature.title}</h3>
-                <p className="mt-3 text-sm leading-[1.7] text-ink-navy/72">{feature.description}</p>
+                <h3 className="mt-6 text-xl font-semibold text-trust-navy">
+                  {feature.title}
+                </h3>
+                <p className="mt-3 text-sm leading-[1.7] text-ink-navy/72">
+                  {feature.description}
+                </p>
               </motion.article>
             );
           })}
@@ -461,7 +563,10 @@ function CaraKerja() {
   };
 
   return (
-    <section id="cara-kerja" className="bg-sage-clear/55 py-16 sm:py-20 lg:py-24">
+    <section
+      id="cara-kerja"
+      className="bg-sage-clear/55 py-16 sm:py-20 lg:py-24"
+    >
       <Container>
         <motion.div
           variants={fadeUp}
@@ -479,8 +584,9 @@ function CaraKerja() {
             Semudah kirim pesan ke teman.
           </h2>
           <p className="mt-4 text-sm leading-[1.7] text-ink-navy/72 sm:text-base">
-            Pilih salah satu langkah untuk melihat bagaimana Haro mencatat transaksi,
-            memberi insight, dan menjaga kebiasaan finansialmu tetap terkendali.
+            Pilih salah satu langkah untuk melihat bagaimana Haro mencatat
+            transaksi, memberi insight, dan menjaga kebiasaan finansialmu tetap
+            terkendali.
           </p>
         </motion.div>
 
@@ -519,7 +625,12 @@ function CaraKerja() {
                     {index + 1}
                   </div>
                   <div className="flex items-start gap-3">
-                    <Icon className={cn("mt-1 size-4 shrink-0", isActive ? "text-sage-active" : "text-trust-navy/70")} />
+                    <Icon
+                      className={cn(
+                        "mt-1 size-4 shrink-0",
+                        isActive ? "text-sage-active" : "text-trust-navy/70",
+                      )}
+                    />
                     <div>
                       <h3 className="text-base font-semibold text-trust-navy">
                         {step.title}
@@ -568,7 +679,9 @@ function CaraKerja() {
                         AI
                       </span>
                     </h3>
-                    <p className="text-xs text-ink-navy/50">Sedang aktif menjaga dompetmu</p>
+                    <p className="text-xs text-ink-navy/50">
+                      Sedang aktif menjaga dompetmu
+                    </p>
                   </div>
                   <button
                     type="button"
@@ -580,16 +693,24 @@ function CaraKerja() {
                   </button>
                 </div>
 
-                <div ref={chatRef} className="flex-1 space-y-2.5 overflow-y-auto p-3.5">
+                <div
+                  ref={chatRef}
+                  className="flex-1 space-y-2.5 overflow-y-auto p-3.5"
+                >
                   <div className="max-w-[86%] rounded-2xl rounded-tl-none border border-sage-clear bg-white p-3 text-xs leading-relaxed text-ink-navy shadow-sm">
-                    <p className="mb-1 text-[10px] font-bold text-sage-active">Haro</p>
-                    Halo! Pilih simulasi di bawah atau klik langkah di sebelah kiri untuk melihat cara
-                    HartaBot bekerja.
+                    <p className="mb-1 text-[10px] font-bold text-sage-active">
+                      Haro
+                    </p>
+                    Halo! Pilih simulasi di bawah atau klik langkah di sebelah
+                    kiri untuk melihat cara HartaBot bekerja.
                   </div>
 
                   {messages.map((message) =>
                     message.from === "user" ? (
-                      <div key={message.id} className="ml-auto max-w-[84%] rounded-2xl rounded-tr-none bg-trust-navy px-3.5 py-2.5 text-xs font-medium text-white shadow-sm">
+                      <div
+                        key={message.id}
+                        className="ml-auto max-w-[84%] rounded-2xl rounded-tr-none bg-trust-navy px-3.5 py-2.5 text-xs font-medium text-white shadow-sm"
+                      >
                         {message.body}
                       </div>
                     ) : (
@@ -602,7 +723,14 @@ function CaraKerja() {
                             : "border-sage-clear bg-white text-ink-navy",
                         )}
                       >
-                        <p className={cn("mb-1 text-[10px] font-bold", message.warning ? "text-red-500" : "text-sage-active")}>
+                        <p
+                          className={cn(
+                            "mb-1 text-[10px] font-bold",
+                            message.warning
+                              ? "text-red-500"
+                              : "text-sage-active",
+                          )}
+                        >
                           {message.title}
                         </p>
                         {message.body}
@@ -640,7 +768,9 @@ function CaraKerja() {
                       <ShieldCheck className="size-3.5 text-sage-active" />
                       WhatsApp & Telegram
                     </span>
-                    <span className="font-semibold text-sage-active">Aktif</span>
+                    <span className="font-semibold text-sage-active">
+                      Aktif
+                    </span>
                   </div>
                 </div>
               </div>
@@ -652,7 +782,8 @@ function CaraKerja() {
   );
 }
 
-function CtaBanner() {
+// Menerima prop onOpenAlert dari LandingPage agar tidak merah lagi
+function CtaBanner({ onOpenAlert }: { onOpenAlert: () => void }) {
   return (
     <section id="coba" className="bg-white pt-14 pb-20 sm:pt-16 sm:pb-24">
       <Container>
@@ -671,15 +802,30 @@ function CtaBanner() {
                 Siap kelola keuangan dengan cara yang lebih mudah?
               </h2>
               <p className="mt-4 max-w-lg text-sm leading-[1.7] text-ink-navy/75 sm:text-base">
-                Pilih kanal yang paling nyaman. Haro akan membantu merapikan catatan dan memberi
-                insight tanpa proses panjang.
+                Pilih kanal yang paling nyaman. Haro akan membantu merapikan
+                catatan dan memberi insight tanpa proses panjang.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Button href="#" className="min-w-36 px-5 text-sm">
-                  <MessageCircle className="size-5" />
-                  WhatsApp
-                </Button>
-                <Button href="#" variant="secondary" className="min-w-36 bg-white/30 px-5 text-sm">
+                <div
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onOpenAlert();
+                  }}
+                  className="cursor-pointer w-full sm:w-auto"
+                >
+                  <Button
+                    href="#"
+                    className="min-w-36 px-5 text-sm pointer-events-none w-full"
+                  >
+                    <MessageCircle className="size-5" />
+                    WhatsApp
+                  </Button>
+                </div>
+                <Button
+                  href="https://t.me/hartabot_bot"
+                  variant="secondary"
+                  className="min-w-36 bg-white/30 px-5 text-sm"
+                >
                   <Send className="size-5" />
                   Telegram
                 </Button>
@@ -688,7 +834,11 @@ function CtaBanner() {
             <div className="relative mx-auto min-h-[205px] w-full max-w-[340px] sm:min-h-[230px]">
               <motion.div
                 animate={{ y: [0, -8, 0], rotate: [-2, 1, -2] }}
-                transition={{ duration: 6.5, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 6.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="absolute left-0 top-4 w-[76%]"
               >
                 <Image
@@ -701,7 +851,11 @@ function CtaBanner() {
               </motion.div>
               <motion.div
                 animate={{ y: [0, 10, 0], rotate: [4, 1, 4] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
                 className="absolute bottom-0 right-0 w-[48%]"
               >
                 <Image
@@ -728,8 +882,8 @@ function Footer() {
           <div>
             <Logo size="footer" />
             <p className="mt-7 max-w-sm text-base leading-[1.8] text-ink-navy/72">
-              Asisten keuangan pribadi berbasis AI yang membantu kamu mencatat, memahami, dan
-              mengendalikan keuangan cukup lewat chat sehari-hari.
+              Asisten keuangan pribadi berbasis AI yang membantu kamu mencatat,
+              memahami, dan mengendalikan keuangan cukup lewat chat sehari-hari.
             </p>
             <div className="mt-8 flex gap-3">
               {socialLinks.map((item) => {
@@ -752,7 +906,10 @@ function Footer() {
             <h2 className="text-sm font-bold uppercase tracking-[0.08em] text-trust-navy">
               Navigasi
             </h2>
-            <nav className="mt-6 flex flex-col gap-4" aria-label="Navigasi footer">
+            <nav
+              className="mt-6 flex flex-col gap-4"
+              aria-label="Navigasi footer"
+            >
               {footerLinks.map((link) => (
                 <a
                   key={link.label}
@@ -773,7 +930,10 @@ function Footer() {
               {footerContact.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className="flex items-center gap-3 text-base text-ink-navy/68">
+                  <div
+                    key={item.label}
+                    className="flex items-center gap-3 text-base text-ink-navy/68"
+                  >
                     <Icon className="size-5 shrink-0 text-sage-active" />
                     <span>{item.label}</span>
                   </div>
@@ -823,22 +983,69 @@ function Footer() {
 
         <div className="-mx-6 flex items-center justify-center gap-3 bg-white/35 px-6 py-5 text-center text-sm text-ink-navy/62 sm:-mx-8 lg:-mx-10">
           <ShieldCheck className="size-5 shrink-0 text-haro-gold" />
-          <p>Dirancang untuk mendukung literasi dan ketahanan keuangan masyarakat Indonesia.</p>
+          <p>
+            Dirancang untuk mendukung literasi dan ketahanan keuangan masyarakat
+            Indonesia.
+          </p>
         </div>
       </Container>
     </footer>
   );
 }
 
+// FUNGSI UTAMA LANDINGPAGE
 export function LandingPage() {
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+
   return (
     <main>
       <Navbar />
-      <Hero />
+      {/* Mengirimkan aksi buka modal ke komponen Hero & CtaBanner */}
+      <Hero onOpenAlert={() => setIsAlertOpen(true)} />
       <Features />
       <CaraKerja />
-      <CtaBanner />
+      <CtaBanner onOpenAlert={() => setIsAlertOpen(true)} />
       <Footer />
+
+      {/* MODAL DIALOG KUSTOM */}
+      {isAlertOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div
+            className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-center shadow-2xl border border-slate-100 sm:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Tombol Silang Batal */}
+            <button
+              onClick={() => setIsAlertOpen(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <X className="size-5" />
+            </button>
+
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-orange-50 mb-4">
+              <MessageCircle className="h-7 w-7 text-orange-500" />
+            </div>
+
+            <h3 className="text-xl font-bold text-slate-900 mb-2">
+              Dalam Pengembangan 🚀
+            </h3>
+
+            <p className="text-sm text-slate-500 mb-6 leading-relaxed">
+              Chatbot WhatsApp saat ini sedang kami siapkan agar makin optimal.
+              Yuk, coba kecanggihan fitur HartaBot lewat{" "}
+              <span className="font-semibold text-orange-500">Telegram</span>{" "}
+              terlebih dahulu!
+            </p>
+
+            <button
+              onClick={() => setIsAlertOpen(false)}
+              className="w-full py-3 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm transition-colors shadow-md shadow-orange-500/20"
+            >
+              Oke, Saya Paham
+            </button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
