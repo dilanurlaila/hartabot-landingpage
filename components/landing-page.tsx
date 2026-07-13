@@ -72,6 +72,7 @@ const assetPaths = {
 };
 
 const telegramBotUrl = "https://t.me/hartabot_bot";
+const whatsappComingSoonUrl = "/whatsapp";
 
 const footerLinks = [
   { label: "Beranda", href: "#beranda" },
@@ -264,7 +265,7 @@ function Hero() {
             keputusan finansial yang lebih tenang lewat chat sehari-hari.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button href="#coba" className="min-w-40">
+            <Button href={whatsappComingSoonUrl} className="min-w-40">
               <MessageCircle className="size-5" />
               WhatsApp
             </Button>
@@ -677,7 +678,7 @@ function CtaBanner() {
                 insight tanpa proses panjang.
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-                <Button href="#" className="min-w-36 px-5 text-sm">
+                <Button href={whatsappComingSoonUrl} className="min-w-36 px-5 text-sm">
                   <MessageCircle className="size-5" />
                   WhatsApp
                 </Button>
