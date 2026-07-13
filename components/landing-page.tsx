@@ -71,6 +71,8 @@ const assetPaths = {
   wallet: "/assets/dompet.avif",
 };
 
+const telegramBotUrl = "https://t.me/hartabot_bot";
+
 const footerLinks = [
   { label: "Beranda", href: "#beranda" },
   { label: "Fitur", href: "#fitur" },
@@ -266,7 +268,7 @@ function Hero() {
               <MessageCircle className="size-5" />
               WhatsApp
             </Button>
-            <Button href="#coba" variant="secondary" className="min-w-40 bg-white/35">
+            <Button href={telegramBotUrl} variant="secondary" className="min-w-40 bg-white/35">
               <Send className="size-5" />
               Telegram
             </Button>
@@ -679,7 +681,11 @@ function CtaBanner() {
                   <MessageCircle className="size-5" />
                   WhatsApp
                 </Button>
-                <Button href="#" variant="secondary" className="min-w-36 bg-white/30 px-5 text-sm">
+                <Button
+                  href={telegramBotUrl}
+                  variant="secondary"
+                  className="min-w-36 bg-white/30 px-5 text-sm"
+                >
                   <Send className="size-5" />
                   Telegram
                 </Button>
