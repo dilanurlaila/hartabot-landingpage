@@ -3,18 +3,17 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ExternalLink, MessageCircle, Send } from "lucide-react";
+import { ArrowLeft, ExternalLink, MessageCircle, Send, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/button";
 import { Container } from "@/components/container";
 
-const whatsappNumber = "628984332174";
-const whatsappDeepLink = `whatsapp://send?phone=${whatsappNumber}`;
-const whatsappWebFallback = `https://wa.me/${whatsappNumber}`;
-const telegramBotUrl = "/telegram";
+const telegramDeepLink = "tg://resolve?domain=hartabot_bot";
+const telegramWebFallback = "https://t.me/hartabot_bot";
+const telegramMirrorFallback = "https://telegram.dog/hartabot_bot";
 
-export default function WhatsAppRedirectPage() {
+export default function TelegramRedirectPage() {
   useEffect(() => {
-    window.location.replace(whatsappDeepLink);
+    window.location.replace(telegramDeepLink);
   }, []);
 
   return (
@@ -34,48 +33,57 @@ export default function WhatsAppRedirectPage() {
             </Link>
 
             <div className="mt-8 inline-flex items-center gap-2 rounded-full bg-white/60 px-4 py-2 text-sm font-semibold text-ink-navy/72 shadow-[0_14px_32px_rgba(26,54,93,0.06)]">
-              <MessageCircle className="size-4 text-haro-gold" />
-              Membuka WhatsApp...
+              <Send className="size-4 text-haro-gold" />
+              Membuka Telegram...
             </div>
 
             <h1 className="mt-7 max-w-2xl text-[2.15rem] font-bold leading-[1.12] text-trust-navy sm:text-5xl">
-              Lanjut ke bot HartaBot di WhatsApp.
+              Lanjut ke @hartabot_bot di Telegram.
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-[1.8] text-ink-navy/76 sm:text-lg">
-              Bot WhatsApp sudah bisa dipakai. Karena nomornya belum terverifikasi sebagai akun
-              bisnis, saat ini masih tampil sebagai nomor pribadi biasa (nama pengirim belum bisa
-              diganti menjadi &quot;HartaBot&quot;).
+              Kalau aplikasi Telegram tidak terbuka otomatis, coba salah satu opsi di bawah ini.
+              Beberapa provider internet di Indonesia sempat memblokir akses langsung ke domain{" "}
+              <span className="font-semibold">t.me</span>, jadi kami sediakan beberapa jalur.
             </p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button href={whatsappDeepLink} className="min-w-52">
-                <MessageCircle className="size-5" />
-                Buka Aplikasi WhatsApp
+              <Button href={telegramDeepLink} className="min-w-52">
+                <Send className="size-5" />
+                Buka Aplikasi Telegram
               </Button>
-              <Button href={whatsappWebFallback} variant="secondary" className="min-w-52 bg-white/35">
+              <Button href={telegramWebFallback} variant="secondary" className="min-w-52 bg-white/35">
                 <ExternalLink className="size-5" />
-                Buka lewat wa.me
+                Buka lewat t.me
               </Button>
             </div>
 
             <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href={telegramBotUrl}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-trust-navy underline decoration-haro-gold/60 underline-offset-4 transition hover:text-haro-gold"
+              <a
+                href={telegramMirrorFallback}
+                className="text-sm font-semibold text-trust-navy underline decoration-haro-gold/60 underline-offset-4 transition hover:text-haro-gold"
               >
-                <Send className="size-4" />
-                Atau coba bot Telegram
-              </Link>
+                Domain alternatif tidak terbuka? Coba telegram.dog/hartabot_bot
+              </a>
+            </div>
+
+            <div className="mt-8 flex items-start gap-3 rounded-2xl bg-white/55 p-4 text-sm leading-[1.7] text-ink-navy/72 shadow-[0_14px_32px_rgba(26,54,93,0.05)]">
+              <ShieldCheck className="mt-0.5 size-5 shrink-0 text-sage-active" />
+              <p>
+                Masih diblokir? Buka aplikasi Telegram secara manual lalu cari{" "}
+                <span className="font-semibold text-trust-navy">@hartabot_bot</span>. Kami
+                menjaga link ini di domain kami sendiri supaya bisa diperbarui kapan saja tanpa
+                mengubah tombol yang kamu klik.
+              </p>
             </div>
           </div>
 
           <div className="order-1 flex justify-center lg:order-2">
-            <div className="relative w-[min(78vw,430px)]">
+            <div className="relative w-[min(70vw,380px)]">
               <div className="absolute inset-x-8 bottom-2 h-16 rounded-full bg-trust-navy/12 blur-2xl" />
               <Image
                 src="/assets/haro-comingsoon.png"
-                alt="Maskot Haro mengarahkan ke WhatsApp"
+                alt="Maskot Haro mengarahkan ke Telegram"
                 width={1024}
                 height={1536}
                 priority

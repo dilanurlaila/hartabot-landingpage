@@ -71,7 +71,7 @@ const assetPaths = {
   wallet: "/assets/dompet.avif",
 };
 
-const telegramBotUrl = "https://t.me/hartabot_bot";
+const telegramBotUrl = "/telegram";
 const whatsappComingSoonUrl = "/whatsapp";
 
 const footerLinks = [
@@ -83,7 +83,7 @@ const footerLinks = [
 ];
 
 const footerContact = [
-  { icon: Phone, label: "WhatsApp: +62 812-3456-7890" },
+  { icon: Phone, label: "WhatsApp: +62 898-4332-174" },
   { icon: Send, label: "Telegram: @Hartabot_bot" },
   { icon: Mail, label: "admin@hartabot.id" },
   { icon: MapPin, label: "Jambi, Indonesia" },
