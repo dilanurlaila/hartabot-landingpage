@@ -7,6 +7,9 @@ type ButtonProps = {
   variant?: "primary" | "secondary" | "ghost";
   className?: string;
   ariaLabel?: string;
+  type?: "button" | "submit";
+  disabled?: boolean;
+  onClick?: () => void;
 };
 
 const variants = {
@@ -17,23 +20,37 @@ const variants = {
   ghost: "text-trust-navy hover:bg-white/55",
 };
 
+const baseClasses =
+  "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-medium leading-none transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-haro-gold/25 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0";
+
 export function Button({
   children,
-  href = "#",
+  href,
   variant = "primary",
   className,
   ariaLabel,
+  type,
+  disabled,
+  onClick,
 }: ButtonProps) {
+  const classes = cn(baseClasses, variants[variant], className);
+
+  if (type === "button" || type === "submit") {
+    return (
+      <button
+        type={type}
+        disabled={disabled}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        className={classes}
+      >
+        {children}
+      </button>
+    );
+  }
+
   return (
-    <Link
-      href={href}
-      aria-label={ariaLabel}
-      className={cn(
-        "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-base font-medium leading-none transition duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-4 focus:ring-haro-gold/25",
-        variants[variant],
-        className,
-      )}
-    >
+    <Link href={href ?? "#"} aria-label={ariaLabel} className={classes}>
       {children}
     </Link>
   );
