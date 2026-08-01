@@ -82,7 +82,14 @@ function FeedbackSuccess({ onReset }: { onReset: () => void }) {
   );
 }
 
-export function FeedbackForm({ formAction = "/" }: { formAction?: string }) {
+// Netlify's deploy-time form bot can't scan Next.js prerendered pages
+// directly (Next Runtime v5 fails the build if data-netlify markup shows
+// up there), so detection happens via the static public/__forms.html
+// file instead, and this component posts straight to that same path.
+// https://opennext.js.org/netlify/forms
+const NETLIFY_FORMS_ENDPOINT = "/__forms.html";
+
+export function FeedbackForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [rating, setRating] = useState(5);
   const [consent, setConsent] = useState(true);
@@ -97,7 +104,7 @@ export function FeedbackForm({ formAction = "/" }: { formAction?: string }) {
     formData.forEach((value, key) => payload.append(key, String(value)));
 
     try {
-      const response = await fetch("/", {
+      const response = await fetch(NETLIFY_FORMS_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: payload.toString(),
@@ -124,9 +131,7 @@ export function FeedbackForm({ formAction = "/" }: { formAction?: string }) {
     <form
       name="feedback-hartabot"
       method="POST"
-      action={formAction}
-      data-netlify="true"
-      data-netlify-honeypot="bot-field"
+      action={NETLIFY_FORMS_ENDPOINT}
       onSubmit={handleSubmit}
       className="space-y-5"
     >

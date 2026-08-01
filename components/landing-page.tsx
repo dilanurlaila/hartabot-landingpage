@@ -801,7 +801,7 @@ function Feedback() {
           transition={{ duration: 0.55 }}
           className="mx-auto mt-12 max-w-2xl rounded-3xl border border-white/70 bg-white p-6 shadow-[0_20px_48px_rgba(26,54,93,0.07)] sm:p-10"
         >
-          <FeedbackForm formAction="/#feedback" />
+          <FeedbackForm />
         </motion.div>
       </Container>
     </section>

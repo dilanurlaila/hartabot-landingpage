@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Form detection</title>
+  </head>
+  <body>
+    <!--
+      This page is not meant to be visited. It exists only so Netlify's
+      deploy-time bot can detect the "feedback-hartabot" form and its
+      fields, since Next.js Runtime v5 can't scan forms rendered inside
+      prerendered app pages directly.
+      https://opennext.js.org/netlify/forms
+    -->
+    <form name="feedback-hartabot" data-netlify="true" data-netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="feedback-hartabot" />
+      <input name="bot-field" />
+      <input name="nama" type="text" />
+      <input name="kontak" type="text" />
+      <input name="rating" type="text" />
+      <textarea name="pesan"></textarea>
+      <input name="izinTestimoni" type="text" />
+    </form>
+  </body>
+</html>

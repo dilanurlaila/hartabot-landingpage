@@ -41,7 +41,7 @@ export default function FeedbackPage() {
         </div>
 
         <div className="mx-auto mt-10 max-w-2xl rounded-3xl border border-white/70 bg-white p-6 shadow-[0_20px_48px_rgba(26,54,93,0.07)] sm:p-10">
-          <FeedbackForm formAction="/feedback" />
+          <FeedbackForm />
         </div>
       </Container>
     </main>
