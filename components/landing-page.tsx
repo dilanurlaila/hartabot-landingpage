@@ -114,9 +114,8 @@ const testimonials = [
 ];
 
 const footerContact = [
-  { icon: Phone, label: "WhatsApp: +62 898-4332-174" },
-  { icon: Send, label: "Telegram: @Hartabot_bot" },
-  { icon: Mail, label: "admin@hartabot.id" },
+  { icon: Phone, label: "+62 895-3668-48906" },
+  { icon: Mail, label: "admin@hartabot.my.id" },
   { icon: MapPin, label: "Jambi, Indonesia" },
 ];
 
@@ -884,7 +883,7 @@ function Footer() {
   return (
     <footer id="tentang" className="bg-sage-clear text-trust-navy">
       <Container>
-        <div className="grid gap-10 py-14 lg:grid-cols-[1.35fr_0.8fr_1.1fr_1.35fr] lg:gap-14">
+        <div className="grid gap-10 py-14 lg:grid-cols-[1.3fr_0.7fr_1.3fr_1.3fr] lg:gap-14">
           <div>
             <Logo size="footer" />
             <p className="mt-7 max-w-sm text-base leading-[1.8] text-ink-navy/72">
@@ -933,7 +932,7 @@ function Footer() {
               {footerContact.map((item) => {
                 const Icon = item.icon;
                 return (
-                  <div key={item.label} className="flex items-center gap-3 text-base text-ink-navy/68">
+                  <div key={item.label} className="flex items-center gap-3 whitespace-nowrap text-base text-ink-navy/68">
                     <Icon className="size-5 shrink-0 text-sage-active" />
                     <span>{item.label}</span>
                   </div>
